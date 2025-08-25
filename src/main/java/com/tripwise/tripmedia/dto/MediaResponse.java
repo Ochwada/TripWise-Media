@@ -109,7 +109,6 @@ public class MediaResponse {
      * Build a {@code MediaResponse} from a {@code Media} entity.
      * Maps fields by name;
      */
-
     public static MediaResponse from(Media m) {
 
         if (m == null) return null;
