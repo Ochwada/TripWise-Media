@@ -36,7 +36,8 @@ build/
 .env
 .env.dev
 .idea/
-.mvn
+# Ignore Maven Wrapper
 mvnw
 mvnw.cmd
+.mvn/
 
