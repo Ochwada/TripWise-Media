@@ -1,0 +1,7 @@
+services:
+  media-service:
+    build: .
+    ports:
+      - "9096:9096"
+    env_file: .env          # <- put your values here
+    restart: unless-stopped

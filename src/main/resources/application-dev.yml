@@ -1,0 +1,25 @@
+# Used online
+server:
+  port: 9096
+
+spring:
+  application:
+    name: media-service
+  data:
+    mongodb:
+      uri: ${SPRING_DATA_MONGODB_URI}   # Atlas M0 URI
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: https://accounts.google.com
+
+media:
+  bucket: ${MEDIA_BUCKET:tripmedia}
+  public-base-url: ${MEDIA_PUBLIC_BASE_URL}                # e.g., https://pub-xxxxx.r2.dev
+  s3:
+    endpoint: ${MEDIA_S3_ENDPOINT}                         # https://<accountid>.r2.cloudflarestorage.com
+    region: ${MEDIA_S3_REGION:auto}
+    access-key: ${MEDIA_S3_ACCESS_KEY}
+    secret-key: ${MEDIA_S3_SECRET_KEY}
+    path-style-access: ${MEDIA_S3_PATH_STYLE_ACCESS:true}
