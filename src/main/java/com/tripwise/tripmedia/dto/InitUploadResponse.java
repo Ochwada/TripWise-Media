@@ -4,6 +4,8 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
 
+import java.util.Map;
+
 /**
  * ================================================================
  * Package Name: com.tripwise.tripmedia.dto
@@ -23,6 +25,11 @@ import lombok.*;
  *    "width": 1024,
  *    "height": 768
  *  }
+ *
+ *
+ *  Response of {@code initUpload}: presigned URL and required headers to PUT the file.
+ *  Integrity/dimension metadata is supplied later in {@code confirmUpload}.
+ *
  */
 
 @Data
@@ -42,30 +49,13 @@ public class InitUploadResponse {
     @NotBlank
     private String storageKey;
 
-    /**
-     * File checksum (e.g., MD5, SHA-256) used to verify file integrity
-     * after upload.
-     */
+
+    /** Presigned PUT URL (expires). */
     @NotBlank
-    private String checksum;
+    private String uploadUrl;
 
-    /**
-     * File size in bytes.
-     * Must be a positive value.
-     */
-    @Positive
-    private long bytes;
-
-    /**
-     * Width of the media in pixels (if applicable, e.g., for images/videos).
-     * -May be {@code null} if the media type does not have dimensions.
-     */
-    private Integer width;
-
-    /**
-     * Height of the media in pixels (if applicable, e.g., for images/videos).
-     * -May be {@code null} if the media type does not have dimensions.
-     */
-    private Integer height;
+    /** Any headers the client must include when uploading to the presigned URL. */
+    @Builder.Default
+    private Map<String, String> headers = Map.of();
 }
 

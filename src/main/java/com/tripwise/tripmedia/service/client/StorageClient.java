@@ -1,7 +1,5 @@
 package com.tripwise.tripmedia.service.client;
 
-import java.net.URL;
-import java.util.*;
 
 /**
  * ================================================================
@@ -15,16 +13,6 @@ import java.util.*;
  * ================================================================
  */
 public interface StorageClient {
-
-    /**
-     * Immutable payload for a presigned HTTP PUT upload.
-     *
-     * @param storageKey canonical storage key/object name
-     * @param url        time-limited URL to perform the PUT request
-     * @param headers    request headers required by the provider (never {@code null}, may be empty)
-     */
-    record PresignedPut(String storageKey, URL url, Map<String, String> headers) {
-    }
 
     /**
      * Create a time-limited URL for uploading an object via HTTP PUT.

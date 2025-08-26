@@ -47,8 +47,7 @@ public class InitUploadRequest {
     @Positive
     private long bytes;
 
-     /**
-      * Optional ID of the journal or entity this media is associated with.
-      */
-    private String journalId;
+     /** The journal this media belongs to. Must belong to the caller (userId). */
+     @NotBlank
+     private String journalId;
 }

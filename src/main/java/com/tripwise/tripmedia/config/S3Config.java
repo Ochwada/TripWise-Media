@@ -64,7 +64,7 @@ public class S3Config {
      * @return a configured {@link S3Presigner} instance.
      */
     @Bean
-    S3Presigner presigner(@Value("${media.s3.endpoint}") String endpoint,
+    public S3Presigner presigner(@Value("${media.s3.endpoint}") String endpoint,
                           @Value("${media.s3.region}") String region,
                           @Value("${media.s3.access-key}") String accessKey,
                           @Value("${media.s3.secret-key}") String secretKey) {

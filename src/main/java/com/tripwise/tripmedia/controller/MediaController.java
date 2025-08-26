@@ -1,18 +1,17 @@
-package com.tripwise.tripmedia.model;
+package com.tripwise.tripmedia.controller;
+
 
 /**
  * ================================================================
- * Package Name: com.tripwise.tripmedia.model
+ * Package Name: com.tripwise.tripmedia.controller
  * Author      : Ochwada-GMK
  * Project Name: tripmedia
- * Date        : Monday,  25.Aug.2025 | 17:02
+ * Date        : Tuesday,  26.Aug.2025 | 10:17
  * Description :
  * ================================================================
  */
-public enum VariantType {
-    ORIGINAL,
-    THUMBNAIL,
-    WEBP,
-    AVIF,
-    MEDIUM
+
+public class MediaController {
+
+
 }

@@ -1,6 +1,8 @@
 package com.tripwise.tripmedia.service.client;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Component;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -9,6 +11,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 
 import java.net.URL;
 import java.time.*;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -30,6 +33,8 @@ import java.util.Map;
  *   bucket: my-media-bucket
  *   public-base-url: https://cdn.example.com/media
  */
+@Component
+@Profile("s3")
 public class S3StorageClient implements StorageClient {
 
     private final S3Client s3;
@@ -56,7 +61,8 @@ public class S3StorageClient implements StorageClient {
         this.bucket = bucket;
         this.publicBaseUrl = (
                 publicBaseUrl == null ||
-                        publicBaseUrl.isBlank()) ? null : publicBaseUrl.replaceAll("/$", "");
+                        publicBaseUrl.isBlank())
+                ? null : publicBaseUrl.replaceAll("/$", "");
     }
 
     /**
@@ -75,6 +81,7 @@ public class S3StorageClient implements StorageClient {
                 .bucket(bucket)
                 .key(key)
                 .contentType(contentType)
+                .contentLength(bytes)
                 .build();
 
         var pre = PutObjectPresignRequest.builder()
@@ -83,7 +90,13 @@ public class S3StorageClient implements StorageClient {
                 .build();
 
         URL url = presigner.presignPutObject(pre).url();
-        return new PresignedPut(key, url, Map.of());
+
+        // Tell the client which headers they MUST send with the PUT.
+        // If you signed them, they are required by S3 to match exactly.
+        Map<String,String> headers = new HashMap<>();
+        headers.put("Content-Type", contentType);
+
+        return new PresignedPut(key, url, headers);
 
     }
 
@@ -112,4 +125,7 @@ public class S3StorageClient implements StorageClient {
     public String publicUrl(String key) {
         return publicBaseUrl == null ? null : publicBaseUrl + "/" + key;
     }
+
+
+
 }

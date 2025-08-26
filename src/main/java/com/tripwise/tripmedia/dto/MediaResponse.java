@@ -115,6 +115,7 @@ public class MediaResponse {
 
         return MediaResponse.builder()
                 .id(m.getId())
+                .userId(m.getUserId())
                 .journalId(m.getJournalId())
                 .filename(m.getFileName())
                 .mimeType(m.getMimeType())

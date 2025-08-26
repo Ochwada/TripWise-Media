@@ -1,5 +1,6 @@
 package com.tripwise.tripmedia.model;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -33,6 +34,11 @@ public class Media {
     private String id;
 
     /**
+     * Owner user ID.
+     */
+    private String userId;
+
+    /**
      * Identifier of the journal or entity this media belongs to.
      */
     private String journalId;
@@ -51,6 +57,16 @@ public class Media {
      * File size in bytes.
      */
     private Long bytes;
+
+    /** Size and optional integrity/dimensions. */
+    private String checksum;
+    private Integer width;
+    private Integer height;
+
+    /** Storage and delivery. */
+    private String storageKey;
+    private String cdnUrl;
+
 
     /**
      * Tags for categorizing or searching the media.

@@ -3,8 +3,7 @@ package com.tripwise.tripmedia.repository;
 import com.tripwise.tripmedia.model.Media;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 
 /**
  * ================================================================
@@ -36,4 +35,7 @@ public interface MediaRepository extends MongoRepository<Media, String> {
      * @return a list of matching {@link Media} documents
      */
     List<Media> findByIdIn(Collection<String> ids);
+
+
+    Optional<Media> findByJournalId(String id);
 }
