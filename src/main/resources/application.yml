@@ -1,3 +1,4 @@
+# src/main/resources/application.yml (local/Postman)
 server:
   port: 9096
 
@@ -19,14 +20,21 @@ spring:
 logging:
   level:
     root: INFO
-    com.tripjournal.media: DEBUG
+    com.tripwise.tripmedia: DEBUG
 
 media:
   bucket: ${MEDIA_BUCKET:tripmedia}
   public-base-url: ${MEDIA_PUBLIC_BASE_URL:http://localhost:9096/media-files}
+  storage: s3   # or "local" if you have a filesystem impl
+  signed-url-ttl-minutes: 20
+
   s3:
-    endpoint: ${MEDIA_S3_ENDPOINT:http://localhost:9000}   # MinIO
+    # Local MinIO (default)
+    endpoint: ${MEDIA_S3_ENDPOINT:http://localhost:9000}
     region: ${MEDIA_S3_REGION:local}
     access-key: ${MEDIA_S3_ACCESS_KEY:minioadmin}
     secret-key: ${MEDIA_S3_SECRET_KEY:minioadmin}
     path-style-access: ${MEDIA_S3_PATH_STYLE_ACCESS:true}
+
+journals:
+  base-url: ${JOURNALS_BASE_URL:http://localhost:9094}

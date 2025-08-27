@@ -1,6 +1,9 @@
 package com.tripwise.tripmedia.service.client;
 
 
+import org.springframework.context.annotation.Profile;
+import org.springframework.stereotype.Service;
+
 /**
  * ================================================================
  * Package Name: com.tripwise.tripmedia.service.client

@@ -1,8 +1,8 @@
 package com.tripwise.tripmedia.service.client;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Profile;
-import org.springframework.stereotype.Component;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.stereotype.Service;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.DeleteObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -33,14 +33,15 @@ import java.util.Map;
  *   bucket: my-media-bucket
  *   public-base-url: https://cdn.example.com/media
  */
-@Component
-@Profile("s3")
+@Service
+@ConditionalOnProperty(name = "media.storage", havingValue = "s3", matchIfMissing = true)
 public class S3StorageClient implements StorageClient {
 
     private final S3Client s3;
     private final S3Presigner presigner;
     private final String bucket;
-    private final String publicBaseUrl;
+    private final String publicBaseUrl;     // optional
+    private final long ttlMinutes;          // presign TTL
 
     /**
      * Constructs a new {@code S3StorageClient}.
@@ -55,14 +56,16 @@ public class S3StorageClient implements StorageClient {
             S3Client s3,
             S3Presigner presigner,
             @Value("${media.bucket}") String bucket,
-            @Value("${media.public-base-url:}") String publicBaseUrl) {
+            @Value("${media.public-base-url:}") String publicBaseUrl,
+            @Value("${media.signed-url-ttl-minutes:20}") long ttlMinutes) {
+
         this.s3 = s3;
         this.presigner = presigner;
         this.bucket = bucket;
-        this.publicBaseUrl = (
-                publicBaseUrl == null ||
-                        publicBaseUrl.isBlank())
-                ? null : publicBaseUrl.replaceAll("/$", "");
+        this.ttlMinutes = ttlMinutes;
+        this.publicBaseUrl = (publicBaseUrl == null || publicBaseUrl.isBlank())
+                ? null
+                : publicBaseUrl.replaceAll("/$", ""); // trim trailing slash
     }
 
     /**
@@ -77,6 +80,9 @@ public class S3StorageClient implements StorageClient {
      */
     @Override
     public PresignedPut presignPut(String key, String contentType, long bytes) {
+        if (key == null || key.isBlank()) throw new IllegalArgumentException("key must not be blank");
+        if (bytes < 0) throw new IllegalArgumentException("bytes must be >= 0");
+
         var put = PutObjectRequest.builder()
                 .bucket(bucket)
                 .key(key)
@@ -85,19 +91,18 @@ public class S3StorageClient implements StorageClient {
                 .build();
 
         var pre = PutObjectPresignRequest.builder()
-                .signatureDuration(Duration.ofMinutes(20))
                 .putObjectRequest(put)
+                .signatureDuration(Duration.ofMinutes(ttlMinutes))
                 .build();
 
         URL url = presigner.presignPutObject(pre).url();
 
-        // Tell the client which headers they MUST send with the PUT.
-        // If you signed them, they are required by S3 to match exactly.
-        Map<String,String> headers = new HashMap<>();
-        headers.put("Content-Type", contentType);
+        Map<String, String> headers = new HashMap<>();
+        if (contentType != null && !contentType.isBlank()) {
+            headers.put("Content-Type", contentType);
+        }
 
         return new PresignedPut(key, url, headers);
-
     }
 
     /**
@@ -123,7 +128,9 @@ public class S3StorageClient implements StorageClient {
      */
     @Override
     public String publicUrl(String key) {
-        return publicBaseUrl == null ? null : publicBaseUrl + "/" + key;
+        return publicBaseUrl == null
+                ? null
+                : publicBaseUrl + "/" + key;
     }
 
 

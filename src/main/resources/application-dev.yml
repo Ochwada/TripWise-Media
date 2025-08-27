@@ -1,25 +1,50 @@
-services:
-  mongo:
-    image: mongo:6
-    ports: ["27017:27017"]
-    volumes: [mongo_data:/data/db]
+# src/main/resources/application-dev.yml (online)
+# Activate with: SPRING_PROFILES_ACTIVE=dev
 
-  minio:
-    image: minio/minio:latest
-    command: server /data --console-address ":9001"
-    environment:
-      MINIO_ROOT_USER: minioadmin
-      MINIO_ROOT_PASSWORD: minioadmin
-    ports: ["9000:9000","9001:9001"]
-    volumes: [minio_data:/data]
+server:
+  # Let the platform or env decide the port in online envs
+  port: ${PORT:9096}
 
-  media-service:
-    build: .
-    ports: ["9096:9096"]
-    env_file: .env.dev
-    depends_on: [mongo, minio]
-    restart: unless-stopped
+spring:
+  application:
+    name: media-service
+  data:
+    mongodb:
+      # No localhost default here — force a proper online URI
+      uri: ${SPRING_DATA_MONGODB_URI}
+  jackson:
+    serialization:
+      WRITE_DATES_AS_TIMESTAMPS: false
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # Keep or replace with your IdP issuer if not Google
+          issuer-uri: ${OAUTH2_ISSUER_URI:https://accounts.google.com}
 
-volumes:
-  mongo_data:
-  minio_data:
+logging:
+  level:
+    root: INFO
+    com.tripwise.tripmedia: INFO
+
+media:
+  bucket: ${MEDIA_BUCKET}
+  public-base-url: ${MEDIA_PUBLIC_BASE_URL}
+  storage: s3
+
+  s3:
+    # Point to AWS S3 *or* your remote MinIO endpoint
+    # e.g., https://s3.eu-central-1.amazonaws.com  OR  https://minio.my-domain.com
+    endpoint: ${MEDIA_S3_ENDPOINT}
+    region: ${MEDIA_S3_REGION:eu-central-1}
+    access-key: ${MEDIA_S3_ACCESS_KEY}
+    secret-key: ${MEDIA_S3_SECRET_KEY}
+    # For AWS S3 generally false; for MinIO often true. Set via env.
+    path-style-access: ${MEDIA_S3_PATH_STYLE_ACCESS:false}
+
+
+journals:
+  base-url: ${JOURNALS_BASE_URL}
+
+
+

@@ -1,10 +1,13 @@
 package com.tripwise.tripmedia;
 
+import com.tripwise.tripmedia.config.MediaProps;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.context.properties.ConfigurationPropertiesScan;
 
 @SpringBootApplication
+@ConfigurationPropertiesScan(basePackageClasses = MediaProps.class)
 public class TripmediaApplication {
 
     public static void main(String[] args) {

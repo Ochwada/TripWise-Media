@@ -12,7 +12,11 @@ import java.util.Map;
  * Description :
  * ================================================================
  */
-public record PresignedPut(String storageKey, URL url, Map<String, String> headers) {
+public record PresignedPut(
+        String storageKey,
+        URL url,
+        Map<String, String> headers
+) {
     // public record PresignedPut(String storageKey, URL url, Map<String, String> headers) {}
 
 }
