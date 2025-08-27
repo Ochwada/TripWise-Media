@@ -207,8 +207,8 @@ JOURNALS_BASE_URL=***
 Service will be available at:
 ```yaml
 # Localhost
-http://localhost:9091/tripmedia
+http://localhost:9096/tripmedia
 
 # Dockerized
-https://tripwise:9091/tripmedia
+https://tripwise:9096/tripmedia
 ```
