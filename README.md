@@ -14,7 +14,7 @@ Microservices ⬇️ part of **TripWise System**
 #### 🖇️ Microservice 2: TripProfile - [ User Profile Service ](https://github.com/reyhanovelek/TripProfile-Service)
 #### 🖇️ Microservice 3: TripPlanner - [ Planner Service](https://github.com/Jind19/TripWise_Planner)
 #### 🖇️ Microservice 4: TripJournal - [ Journal Service](https://github.com/Ochwada/TripWise-Journal)
-#### 🖇️ Microservice 6: TripJournal - [ Media Service](https://github.com/Ochwada/TripWise-Media)
+#### 🖇️ Microservice 6: TripMedia - [ Media Service](https://github.com/Ochwada/TripWise-Media)
 
 ---
 
